@@ -1,0 +1,135 @@
+{% extends 'layouts/adminlayout.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+<!DOCTYPE html>
+
+{% block header %}
+    <head>
+        <meta charset="UTF-8">
+        <title>Yönetici | İlan Detay</title>
+    </head>
+{% endblock %}
+
+
+{% block content %}
+    <div class="content">
+        <div class="container-fluid">
+            <div class="card mt-3">
+                <div class="card-header header-elements-inline">
+                    <div class="col-md-3 col-xl-6">
+                        <h5 class="card-title">İlan Detay</h5>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <fieldset>
+                                <legend class="font-weight-semibold"></legend>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Pozisyon:</label>
+                                    <div class="col-lg-9">
+                                        <input type="text" class="form-control" readonly value="{{ jobpost.job }}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Pozisyon Durumu:</label>
+                                    <div class="col-lg-9">
+                                        <input type="text" class="form-control" readonly value="{{ jobpost.job_post_status }}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">İş Tanımı:</label>
+                                    <div class="col-lg-9">
+                                        <textarea class="form-control" readonly>{{ jobpost.job_description }}</textarea>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-md-6">
+                            <fieldset>
+                                <legend class="font-weight-semibold"></legend>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Çalışma Modeli:</label>
+                                    <div class="col-lg-9">
+                                        <input type="text" class="form-control" readonly
+                                               value="{{ jobpost.working_model }}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Konum:</label>
+                                    <div class="col-lg-9">
+                                        <input type="text" class="form-control" readonly
+                                               value="{{ jobpost.location }}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Aranan Nitelikler:</label>
+                                    <div class="col-lg-9">
+                                        <textarea class="form-control" readonly>{{ jobpost.job_required }}</textarea>
+
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header header-elements-sm-inline">
+                                    <h6 class="card-title">Başvuran Adaylar</h6>
+                                </div>
+                                <div class="table-responsive table-scrollable">
+                                    <table class="table text-nowrap table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>İsim</th>
+                                            <th>CV</th>
+                                            <th>Başvuru Durumu</th>
+                                            <th>Başvuru Zamanı</th>
+                                            <th class="text-right">Aksiyon</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for candidate in candidate_list %}
+                                            <tr>
+                                                <td>
+                                                    {{ candidate.jobseeker.first_name }} {{ candidate.jobseeker.last_name }}
+                                                </td>
+                                                <td>
+                                                    {% if candidate.jobseeker.careerprofile.cv %}
+                                                        <span class="badge bg-success">Var</span>
+                                                    {% else %}
+                                                        <span class="badge bg-warning">Yok</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {{ candidate.job_application_status }}
+                                                </td>
+                                                <td>
+                                                    {{ candidate.created_at }}
+                                                </td>
+                                                <td class="text-right">
+                                                    <div class="dropdown">
+                                                        <a href="#" class="list-icons-item" data-toggle="dropdown">
+                                                            <i class="icon-menu9"></i>
+                                                        </a>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            <a href="{% url 'manager:detail-job-application' candidate.uuid %}"
+                                                               class="dropdown-item"><i class="icon-search4"></i> Detay</a>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

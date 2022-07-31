@@ -1,0 +1,75 @@
+{% extends 'layouts/adminlayout.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+<!DOCTYPE html>
+
+{% block header %}
+    <head>
+        <meta charset="UTF-8">
+        <title>Aday | Ana Sayfa</title>
+    </head>
+{% endblock %}
+
+
+{% block content %}
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row page-title align-items-center">
+                <div class="col-md-3 col-xl-6">
+                    <h4>Bana Özel İlanlar</h4>
+                </div>
+            </div>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="justified-top-icon-tab1">
+                    <div class="card">
+                        <div class="card-body">
+                            <table id="agencies" class="table table-hover table-bordered table-striped">
+                                <thead>
+                                <tr role="row" class="bg-slate-800">
+                                    <th>Pozisyon</th>
+                                    <th>Çalışma Modeli</th>
+                                    <th>Konum</th>
+                                    <th>Oluşturulma Zamanı</th>
+                                    <th class="text-right">Aksiyon</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for post in all_posts %}
+                                    <tr>
+                                        <td>
+                                            {{ post.job }}
+                                        </td>
+                                        <td>
+                                            {{ post.working_model }}
+                                        </td>
+                                        <td>
+                                            {{ post.location }}
+                                        </td>
+                                        <td>
+                                            {{ post.created_at|date:"d M Y" }}
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="dropdown">
+                                                <a href="#" class="list-icons-item" data-toggle="dropdown">
+                                                    <i class="icon-menu9"></i>
+                                                </a>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    <a href="{% url 'jobseek:detail-job-post' post.uuid %}"
+                                                       class="dropdown-item"><i class="icon-search4"></i> Detay</a>
+                                                    <a href="{% url 'jobseek:apply-fast-job-post' post.uuid %}"
+                                                       class="dropdown-item"><i class="icon-arrow-up-left3"></i> Hızlı Başvur</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

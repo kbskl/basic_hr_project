@@ -1,0 +1,91 @@
+{% extends 'layouts/adminlayout.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+<!DOCTYPE html>
+
+{% block header %}
+    <head>
+        <meta charset="UTF-8">
+        <title>Yönetici | Başvuru Detay</title>
+    </head>
+{% endblock %}
+
+
+{% block content %}
+    <div class="content">
+        <div class="container-fluid">
+            <div class="card mt-3">
+                <div class="card-header header-elements-inline">
+                    <div class="col-md-3 col-xl-6">
+                        <h5 class="card-title"><a href="{% url 'manager:detail-job-post' job_application.job_post.uuid %}">{{ job_application.job_post.job }}</a> - Başvuru Detay</h5>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <fieldset>
+                                <legend class="font-weight-semibold"></legend>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">İsim Soyisim:</label>
+                                    <div class="col-lg-9">
+                                        <input type="text" class="form-control" readonly value="{{ job_application.jobseeker.first_name }} {{ job_application.jobseeker.last_name }}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Email:</label>
+                                    <div class="col-lg-9">
+                                        <input type="text" class="form-control" readonly value="{{ job_application.jobseeker.email }}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Cinsiyet:</label>
+                                    <div class="col-lg-9">
+                                        <input type="text" class="form-control" readonly value="{{ job_application.jobseeker.profile.gender }}">
+                                    </div>
+                                </div>
+                                {% if job_application.jobseeker.careerprofile.cv %}
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">CV:</label>
+                                        <div class="col-lg-9">
+                                            <a href="{{ job_application.jobseeker.careerprofile.cv.url }}">INDIR</a>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Başvuru Notu:</label>
+                                    <div class="col-lg-9">
+                                        <textarea class="form-control" readonly>{{ job_application.jobseeker_note|default_if_none:'' }}</textarea>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-md-6">
+
+                            <form class="job-post-form" action="{% url 'manager:detail-job-application' job_application.uuid %}" method="post">
+                                {% csrf_token %}
+                                <legend class="font-weight-semibold"></legend>
+                                <div class="form-group row">
+                                    <div class="col-lg-9">
+                                        {{ job_application_form.job_application_status|as_crispy_field  }}
+
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-lg-9">
+                                        {{ job_application_form.employer_note|as_crispy_field  }}
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <button type="submit" name="jobApplicationUpdate" class="btn btn-primary btn-block">Güncelle <i
+                                            class="icon-circle-right2 ml-2"></i></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

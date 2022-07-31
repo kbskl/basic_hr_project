@@ -1,0 +1,147 @@
+{% extends 'layouts/adminlayout.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+<!DOCTYPE html>
+
+{% block header %}
+    <head>
+        <meta charset="UTF-8">
+        <title>Aday | İlan Detay</title>
+    </head>
+{% endblock %}
+
+
+{% block content %}
+    <div class="content">
+        <div class="container-fluid">
+            <div class="card mt-3">
+                <div class="card-header header-elements-inline">
+                    <div class="col-md-3 col-xl-6">
+                        <h5 class="card-title">İlan Detay</h5>
+                    </div>
+                    {% if jobapplication is None %}
+                        <div class="col-md-9 col-xl-6 text-md-right">
+                            <div><a data-toggle="modal" data-target="#apply_modal" class="btn mb-3 mb-sm-0"><i
+                                    class="icon icon-plus-circle2 mr-1"></i> Başvur</a></div>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <fieldset>
+                                <legend class="font-weight-semibold"></legend>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Pozisyon:</label>
+                                    <div class="col-lg-9">
+                                        <input type="text" class="form-control" readonly value="{{ jobpost.job }}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Pozisyon Durumu:</label>
+                                    <div class="col-lg-9">
+                                        <input type="text" class="form-control" readonly value="{{ jobpost.job_post_status }}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">İş Tanımı:</label>
+                                    <div class="col-lg-9">
+                                        <textarea class="form-control" readonly>{{ jobpost.job_description }}</textarea>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-md-6">
+                            <fieldset>
+                                <legend class="font-weight-semibold"></legend>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Çalışma Modeli:</label>
+                                    <div class="col-lg-9">
+                                        <input type="text" class="form-control" readonly
+                                               value="{{ jobpost.working_model }}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Konum:</label>
+                                    <div class="col-lg-9">
+                                        <input type="text" class="form-control" readonly
+                                               value="{{ jobpost.location }}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Aranan Nitelikler:</label>
+                                    <div class="col-lg-9">
+                                        <textarea class="form-control" readonly>{{ jobpost.job_required }}</textarea>
+
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% if jobapplication %}
+                <div class="card mt-3">
+                    <div class="card-header header-elements-inline">
+                        <div class="col-md-3 col-xl-6">
+                            <h5 class="card-title">Başvuru Detay</h5>
+                        </div>
+                        <div><a class="btn mb-3 mb-sm-0">Başvuru Zamanı: {{ jobapplication.created_at }}</a></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <fieldset>
+                                    <legend class="font-weight-semibold"></legend>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Durum:</label>
+                                        <div class="col-lg-9">
+                                            <input type="text" class="form-control" readonly value="{{ jobapplication.job_application_status }}">
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="col-md-6">
+                                <fieldset>
+                                    <legend class="font-weight-semibold"></legend>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Başvuru Notu:</label>
+                                        <div class="col-lg-9">
+                                            <textarea class="form-control" readonly>{{ jobapplication.jobseeker_note|default_if_none:'' }}</textarea>
+
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div id="apply_modal" class="modal fade" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title">{{ jobpost.job }} Başvuru</h6>
+                    <button type="button" class="close" data-dismiss="modal">&times;
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="job-post-form" action="{% url 'jobseek:apply-job-post' jobpost.uuid %}" method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            {{ jobapplication_form|crispy }}
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" name="jobApplicationSubmit" class="btn btn-primary btn-block">Başvur<i
+                                    class="icon-circle-right2 ml-2"></i></button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
